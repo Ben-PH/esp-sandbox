@@ -3,19 +3,15 @@
 
 use esp32c3_hal::{
     clock::ClockControl,
-    delay::Delay,
-    ledc::{
-        channel,
-        timer::{self},
-        LSGlobalClkSource, LowSpeed, LEDC,
-    },
     peripherals::Peripherals,
     prelude::*,
+    pulse_control::{ClockSource, ConfiguredChannel, OutputChannel, PulseCode, RepeatMode},
     timer::TimerGroup,
-    Rtc, IO,
+    PulseControl, Rtc, IO,
 };
 use esp_backtrace as _;
-use esp_println::println;
+// use esp_hal_smartled::{smartLedAdapter, SmartLedsAdapter};
+// use esp_println::println;
 #[entry]
 fn main() -> ! {
     let peripherals = Peripherals::take();
@@ -23,48 +19,44 @@ fn main() -> ! {
     let clocks = ClockControl::boot_defaults(system.clock_control).freeze();
 
     // Instantiate and Create Handles for the RTC and TIMG watchdog timers
-    // let mut rtc = Rtc::new(peripherals.RTC_CNTL);
-    // let timer_group0 = TimerGroup::new(peripherals.TIMG0, &clocks);
-    // let mut wdt0 = timer_group0.wdt;
-    // let timer_group1 = TimerGroup::new(peripherals.TIMG1, &clocks);
-    // let mut wdt1 = timer_group1.wdt;
+    let mut rtc = Rtc::new(peripherals.RTC_CNTL);
+    let timer_group0 = TimerGroup::new(peripherals.TIMG0, &clocks);
+    let mut wdt0 = timer_group0.wdt;
+    let timer_group1 = TimerGroup::new(peripherals.TIMG1, &clocks);
+    let mut wdt1 = timer_group1.wdt;
+    rtc.swd.disable();
+    rtc.rwdt.disable();
+    wdt0.disable();
+    wdt1.disable();
 
     let io = IO::new(peripherals.GPIO, peripherals.IO_MUX);
-    let led_pin = io.pins.gpio2.into_push_pull_output();
-    // rtc.swd.disable();
-    // rtc.rwdt.disable();
-    // wdt0.disable();
-    // wdt1.disable();
-    // Initialize and create handle for LEDC peripheral
-    let mut ledc = LEDC::new(
-        peripherals.LEDC,
-        &clocks,
+    let pulse = PulseControl::new(
+        peripherals.RMT,
         &mut system.peripheral_clock_control,
-    );
+        ClockSource::APB,
+        0,
+        0,
+        0,
+    )
+    .unwrap();
+    let mut rmt_channel0 = pulse.channel0;
+    rmt_channel0
+        .set_idle_output_level(false)
+        .set_carrier_modulation(false)
+        .set_channel_divider(1)
+        .set_idle_output(true);
+    let mut rmt_channel0 = rmt_channel0.assign_pin(io.pins.gpio2);
+    let seq = [PulseCode {
+        level1: true,
+        length1: 400u32.nanos(),
+        level2: false,
+        length2: 1350u32.nanos(),
+    }; 24];
+    // Initialize and create handle for LEDC peripheral
 
-    // Set up global clock source for LEDC to APB Clk
-    ledc.set_global_slow_clock(LSGlobalClkSource::APBClk);
-
-    // set up a means to delay
-    let mut delay = Delay::new(&clocks);
-    let mut lstimer0 = ledc.get_timer::<LowSpeed>(timer::Number::Timer0);
-    lstimer0
-        .configure(timer::config::Config {
-            duty: timer::config::Duty::Duty5Bit,
-            clock_source: timer::LSClockSource::APBClk,
-            frequency: 800u32.Hz(),
-        })
-        .unwrap();
-
-    let mut channel0 = ledc.get_channel(channel::Number::Channel0, led_pin);
-
-    channel0
-        .configure(channel::config::Config {
-            timer: &lstimer0,
-            duty_pct: 64,
-        })
-        .unwrap();
     loop {
-        delay.delay_ms(10 * 1000u32);
+        rmt_channel0
+            .send_pulse_sequence(RepeatMode::SingleShot, &seq)
+            .unwrap();
     }
 }

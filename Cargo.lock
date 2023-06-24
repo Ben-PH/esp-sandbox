@@ -24,6 +24,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dc827186963e592360843fb5ba4b973e145841266c1357f7180c43526f2e5b61"
 
 [[package]]
+name = "bitflags"
+version = "2.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6dbe3c979c178231552ecba20214a8272df4e09f232a87aef4320cf06539aded"
+
+[[package]]
 name = "bytemuck"
 version = "1.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -117,7 +123,31 @@ dependencies = [
  "embedded-hal",
  "esp-hal-procmacros",
  "esp-riscv-rt",
- "esp32c3",
+ "esp32c3 0.13.0",
+ "fugit",
+ "nb 1.1.0",
+ "paste",
+ "riscv-atomic-emulation-trap",
+ "serde",
+ "strum",
+ "void",
+]
+
+[[package]]
+name = "esp-hal-common"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d077ffedaa2632004cf73e713438a18706d6d04d2fb0632ffe5a5f02bb9c17e0"
+dependencies = [
+ "basic-toml",
+ "bitflags",
+ "cfg-if",
+ "critical-section",
+ "embedded-dma",
+ "embedded-hal",
+ "esp-hal-procmacros",
+ "esp-riscv-rt",
+ "esp32c3 0.14.0",
  "fugit",
  "nb 1.1.0",
  "paste",
@@ -143,11 +173,11 @@ dependencies = [
 
 [[package]]
 name = "esp-hal-smartled"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c9f798ae33a9a0fb1c329727acf811e3142739065b5d8635453dd0a96103ee0d"
+checksum = "ad44c81ca3bbb4d92bba61b1da1bcb5f954b18241518bfaa35d15bad79c58148"
 dependencies = [
- "esp-hal-common",
+ "esp-hal-common 0.9.0",
  "fugit",
  "smart-leds-trait",
 ]
@@ -182,6 +212,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "esp32c3"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1b6fdc5f5a2774cd7255c1bcee3056569301a657a59ad01ff7dc9a32370c694d"
+dependencies = [
+ "critical-section",
+ "vcell",
+]
+
+[[package]]
 name = "esp32c3-hal"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -189,7 +229,7 @@ checksum = "bf196521d39de7ca712d01bc78de215464ab32f57342e8ca87104f51bd914c1a"
 dependencies = [
  "cfg-if",
  "embedded-hal",
- "esp-hal-common",
+ "esp-hal-common 0.8.0",
 ]
 
 [[package]]
@@ -402,9 +442,9 @@ dependencies = [
 
 [[package]]
 name = "smart-leds"
-version = "0.3.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "38dd45fa275f70b4110eac5f5182611ad384f88bb22b68b9a9c3cafd7015290b"
+checksum = "ab0a30e934e60850bfc020d4c2727cc8a3635371f6af2cb3f55f36f0134ed080"
 dependencies = [
  "smart-leds-trait",
 ]
