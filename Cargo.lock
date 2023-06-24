@@ -112,29 +112,6 @@ dependencies = [
 
 [[package]]
 name = "esp-hal-common"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c37621a91b6465e4d13eb5596530e67304a0ef04d186d832012b2b9d7a3cd394"
-dependencies = [
- "basic-toml",
- "cfg-if",
- "critical-section",
- "embedded-dma",
- "embedded-hal",
- "esp-hal-procmacros",
- "esp-riscv-rt",
- "esp32c3 0.13.0",
- "fugit",
- "nb 1.1.0",
- "paste",
- "riscv-atomic-emulation-trap",
- "serde",
- "strum",
- "void",
-]
-
-[[package]]
-name = "esp-hal-common"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d077ffedaa2632004cf73e713438a18706d6d04d2fb0632ffe5a5f02bb9c17e0"
@@ -147,7 +124,7 @@ dependencies = [
  "embedded-hal",
  "esp-hal-procmacros",
  "esp-riscv-rt",
- "esp32c3 0.14.0",
+ "esp32c3",
  "fugit",
  "nb 1.1.0",
  "paste",
@@ -177,7 +154,7 @@ version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ad44c81ca3bbb4d92bba61b1da1bcb5f954b18241518bfaa35d15bad79c58148"
 dependencies = [
- "esp-hal-common 0.9.0",
+ "esp-hal-common",
  "fugit",
  "smart-leds-trait",
 ]
@@ -203,16 +180,6 @@ dependencies = [
 
 [[package]]
 name = "esp32c3"
-version = "0.13.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e27af709b69fba964429db0c34ea28d6aeb74202ab88d9edbe7bdd4a4ce29fd5"
-dependencies = [
- "critical-section",
- "vcell",
-]
-
-[[package]]
-name = "esp32c3"
 version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1b6fdc5f5a2774cd7255c1bcee3056569301a657a59ad01ff7dc9a32370c694d"
@@ -223,13 +190,13 @@ dependencies = [
 
 [[package]]
 name = "esp32c3-hal"
-version = "0.8.0"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bf196521d39de7ca712d01bc78de215464ab32f57342e8ca87104f51bd914c1a"
+checksum = "bb3469727f70c746eb2ad046f86e5f9e1f4b352d4976c16d1a3e58c0a6cac7e4"
 dependencies = [
  "cfg-if",
  "embedded-hal",
- "esp-hal-common 0.8.0",
+ "esp-hal-common",
 ]
 
 [[package]]
